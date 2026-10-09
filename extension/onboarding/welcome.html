@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to Tab Sleeper</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: #0f1117;
+      color: #e2e4e9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      line-height: 1.6;
+    }
+    .container {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #f0f1f4;
+      margin-bottom: 16px;
+    }
+    p {
+      color: #b0b4c0;
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+    .features {
+      text-align: left;
+      background: #12141c;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .feature-item:last-child {
+      margin-bottom: 0;
+    }
+    .feature-emoji {
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    .feature-text strong {
+      display: block;
+      color: #f0f1f4;
+    }
+    .feature-text span {
+      color: #7a7f8e;
+      font-size: 14px;
+    }
+    .btn {
+      display: inline-block;
+      background: #6c72ff;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:hover { background: #5a60e6; }
+    .btn:active { transform: scale(0.97); }
+
+    /* ---- Author Credit ---- */
+    .author-credit {
+      margin-top: 36px;
+      text-align: center;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, rgba(108, 114, 255, 0.15), rgba(108, 114, 255, 0.05));
+      border: 1px solid rgba(108, 114, 255, 0.25);
+      border-radius: 12px;
+      font-size: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      width: 100%;
+    }
+    .author-credit .author-label { color: #8b8fff; font-weight: 500; }
+    .author-credit .author-name { color: #fff; font-weight: 700; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">💤</div>
+    <h1>Welcome to Tab Sleeper!</h1>
+    <p>Your browser is about to get a lot faster. Tab Sleeper automatically unloads tabs you aren't using to save CPU and RAM.</p>
+    
+    <div class="features">
+      <div class="feature-item">
+        <span class="feature-emoji">⏱️</span>
+        <div class="feature-text">
+          <strong>Auto-Sleep</strong>
+          <span>Tabs sleep after 5 minutes of inactivity. Just click the tab to instantly wake it up!</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎧</span>
+        <div class="feature-text">
+          <strong>Smart Detection</strong>
+          <span>We never sleep pinned tabs or tabs playing music/video.</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-emoji">⌨️</span>
+        <div class="feature-text">
+          <strong>Shortcut & Popup</strong>
+          <span>Use <code>Ctrl+Shift+S</code> to instantly sleep your current tab, or use the popup to sleep all other tabs!</span>
+        </div>
+      </div>
+    </div>
+    
+    <a href="#" class="btn" id="openSettings">Configure Settings</a>
+    
+    <div class="author-credit">
+      <span class="author-label">Author:</span>
+      <span class="author-name">Jyotirmay Biswas</span>
+    </div>
+  </div>
+
+  <script src="welcome.js"></script>
+</body>
+</html>

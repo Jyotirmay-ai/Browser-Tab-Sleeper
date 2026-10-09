@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tab Sleeper — Settings</title>
+  <style>
+    /* ---- Reset & base ---- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: #0f1117;
+      color: #e2e4e9;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 48px 16px;
+      line-height: 1.5;
+    }
+
+    /* ---- Card ---- */
+    .card {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 16px;
+      padding: 36px 32px 28px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .4);
+    }
+
+    /* ---- Grid Layout ---- */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 650px) {
+      .settings-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    /* ---- Header ---- */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .header-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f0f1f4;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #7a7f8e;
+      margin-top: 2px;
+    }
+
+    /* ---- Form groups ---- */
+    .group {
+      margin-bottom: 24px;
+    }
+    .group:last-of-type {
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #c5c8d2;
+      margin-bottom: 8px;
+    }
+
+    /* ---- Number input ---- */
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="number"] {
+      width: 90px;
+      padding: 10px 12px;
+      background: #12141c;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      color: #f0f1f4;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input[type="number"]:focus {
+      border-color: #6c72ff;
+      box-shadow: 0 0 0 3px rgba(108, 114, 255, .15);
+    }
+    input[type="number"].invalid {
+      border-color: #ff5c5c;
+      box-shadow: 0 0 0 3px rgba(255, 92, 92, .12);
+    }
+    .unit {
+      font-size: 14px;
+      color: #7a7f8e;
+    }
+    .hint {
+      font-size: 12px;
+      color: #5a5e6b;
+      margin-top: 6px;
+    }
+
+    /* ---- Toggle switches ---- */
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #1f2230;
+    }
+    .toggle-group:last-child {
+      border-bottom: none;
+    }
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #c5c8d2;
+      margin-bottom: 0;
+    }
+    .toggle-desc {
+      font-size: 12px;
+      color: #5a5e6b;
+      margin-top: 2px;
+    }
+
+    /* Custom toggle switch */
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #2a2d3a;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background .25s;
+    }
+    .slider::before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      background: #7a7f8e;
+      border-radius: 50%;
+      transition: transform .25s, background .25s;
+    }
+    .switch input:checked + .slider {
+      background: #6c72ff;
+    }
+    .switch input:checked + .slider::before {
+      transform: translateX(20px);
+      background: #fff;
+    }
+    .switch input:focus-visible + .slider {
+      box-shadow: 0 0 0 3px rgba(108, 114, 255, .25);
+    }
+
+    /* ---- Save button ---- */
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    button {
+      padding: 10px 24px;
+      background: #6c72ff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    button:hover {
+      background: #5a60e6;
+    }
+    button:active {
+      transform: scale(.97);
+    }
+    button:focus-visible {
+      outline: 2px solid #6c72ff;
+      outline-offset: 2px;
+    }
+
+    /* ---- Status toast ---- */
+    .status {
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .status.show {
+      opacity: 1;
+    }
+    .status.success { color: #4cdf8b; }
+    .status.error   { color: #ff5c5c; }
+
+    /* ---- Divider ---- */
+    .divider {
+      border: none;
+      border-top: 1px solid #1f2230;
+      margin: 4px 0 20px;
+    }
+
+    /* ---- Whitelist ---- */
+    .section-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #c5c8d2;
+      margin-bottom: 10px;
+    }
+    .wl-add-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .wl-add-row input[type="text"] {
+      flex: 1;
+      padding: 9px 12px;
+      background: #12141c;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      color: #f0f1f4;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .wl-add-row input[type="text"]:focus {
+      border-color: #6c72ff;
+      box-shadow: 0 0 0 3px rgba(108, 114, 255, .15);
+    }
+    .wl-add-row input[type="text"]::placeholder {
+      color: #4a4e5a;
+    }
+    .btn-add {
+      padding: 9px 14px;
+      font-size: 13px;
+      background: #2a2d3a;
+      color: #c5c8d2;
+      white-space: nowrap;
+    }
+    .btn-add:hover {
+      background: #353848;
+    }
+    .wl-list {
+      list-style: none;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .wl-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .wl-list::-webkit-scrollbar-thumb {
+      background: #2a2d3a;
+      border-radius: 2px;
+    }
+    .wl-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: #12141c;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      color: #b0b4c0;
+    }
+    .wl-item .domain {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .wl-remove {
+      background: none;
+      border: none;
+      color: #5a5e6b;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0 4px;
+      line-height: 1;
+      transition: color .2s;
+    }
+    .wl-remove:hover {
+      color: #ff5c5c;
+    }
+    .wl-empty {
+      font-size: 12px;
+      color: #4a4e5a;
+      font-style: italic;
+    }
+
+    /* ---- Author Credit ---- */
+    .author-credit {
+      margin-top: 24px;
+      text-align: center;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(108, 114, 255, 0.15), rgba(108, 114, 255, 0.05));
+      border: 1px solid rgba(108, 114, 255, 0.25);
+      border-radius: 12px;
+      font-size: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    .author-credit .author-label { color: #8b8fff; font-weight: 500; }
+    .author-credit .author-name { color: #fff; font-weight: 700; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <span class="header-icon">💤</span>
+      <div>
+        <h1>Tab Sleeper Settings</h1>
+        <p class="subtitle">Configure when idle tabs get put to sleep</p>
+      </div>
+    </div>
+
+    <div class="settings-grid">
+      <!-- LEFT COLUMN -->
+      <div class="settings-col">
+        <!-- Idle time & Threshold -->
+        <div class="group">
+          <label for="idleMinutes">Sleep tabs after</label>
+          <div class="input-row">
+            <input type="number" id="idleMinutes" min="1" max="1440" step="1">
+            <span class="unit">minutes of inactivity</span>
+          </div>
+          <p class="hint">Allowed range: 1 – 1440 (24 hours)</p>
+          
+          <br>
+          
+          <label for="minTabsThreshold">Only sleep when you have more than</label>
+          <div class="input-row">
+            <input type="number" id="minTabsThreshold" min="0" max="999" step="1" value="0">
+            <span class="unit">tabs open</span>
+          </div>
+          <p class="hint">Set to 0 to always sleep tabs regardless of count.</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Toggles -->
+        <div class="group">
+          <div class="toggle-group">
+            <div>
+              <p class="toggle-label">Skip pinned tabs</p>
+              <p class="toggle-desc">Pinned tabs will never be put to sleep</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="skipPinned">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div>
+              <p class="toggle-label">Skip audible tabs</p>
+              <p class="toggle-desc">Tabs playing sound will stay awake</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="skipAudible">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div>
+              <p class="toggle-label">Sleep tabs on startup</p>
+              <p class="toggle-desc">Put background tabs to sleep when browser starts</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="sleepOnStartup">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="settings-col">
+        <!-- Whitelist -->
+        <div class="group" style="height: 100%; display: flex; flex-direction: column;">
+          <p class="section-title">Whitelisted domains</p>
+          <p class="hint" style="margin-bottom: 10px;">These sites will never be put to sleep</p>
+          <div class="wl-add-row">
+            <input type="text" id="wlInput" placeholder="e.g. mail.google.com">
+            <button class="btn-add" id="wlAddBtn" type="button">+ Add</button>
+          </div>
+          <ul class="wl-list" id="wlList" style="flex-grow: 1; max-height: none;"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save -->
+    <div class="actions">
+      <button id="saveBtn" type="button">Save settings</button>
+      <span id="status" class="status"></span>
+    </div>
+    
+    <div class="author-credit">
+      <span class="author-label">Author:</span>
+      <span class="author-name">Jyotirmay Biswas</span>
+    </div>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</body>
+</html>

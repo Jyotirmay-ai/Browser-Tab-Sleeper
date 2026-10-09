@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tab Sleeper</title>
+  <style>
+    /* ---- Reset & base ---- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 300px;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: #0f1117;
+      color: #e2e4e9;
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .header-icon { font-size: 22px; }
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f0f1f4;
+    }
+
+    /* ---- Stats card ---- */
+    .stat-card {
+      background: linear-gradient(135deg, #1e2038, #1a1d2e);
+      border: 1px solid #2a2d3a;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #6c72ff;
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #7a7f8e;
+      margin-top: 4px;
+    }
+
+    /* ---- Pause banner ---- */
+    .pause-banner {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 180, 50, .1);
+      border: 1px solid rgba(255, 180, 50, .25);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #ffb432;
+    }
+    .pause-banner.show { display: flex; }
+    .pause-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffb432;
+      flex-shrink: 0;
+    }
+
+    /* ---- Buttons ---- */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .1s, opacity .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    button:active { transform: scale(.97); }
+    button:focus-visible {
+      outline: 2px solid #6c72ff;
+      outline-offset: 2px;
+    }
+
+    /* Pause / Resume & Whitelist */
+    #pauseBtn, #whitelistBtn {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      color: #e2e4e9;
+    }
+    #pauseBtn:hover, #whitelistBtn:hover { background: #222532; }
+    #pauseBtn.paused {
+      background: rgba(108, 114, 255, .12);
+      border-color: rgba(108, 114, 255, .3);
+      color: #8b8fff;
+    }
+
+    /* Sleep now */
+    #sleepBtn {
+      background: #6c72ff;
+      color: #fff;
+    }
+    #sleepBtn:hover { background: #5a60e6; }
+    #sleepBtn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ---- Footer link ---- */
+    .footer {
+      margin-top: 14px;
+      text-align: center;
+    }
+    .footer a {
+      font-size: 12px;
+      color: #5a5e6b;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer a:hover { color: #8b8fff; }
+
+    /* ---- Status toast ---- */
+    .status {
+      font-size: 12px;
+      text-align: center;
+      margin-top: 8px;
+      min-height: 18px;
+      color: #4cdf8b;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .status.show { opacity: 1; }
+
+    /* ---- Author Credit ---- */
+    .author-credit {
+      margin-top: 16px;
+      text-align: center;
+      padding: 10px;
+      background: linear-gradient(135deg, rgba(108, 114, 255, 0.15), rgba(108, 114, 255, 0.05));
+      border: 1px solid rgba(108, 114, 255, 0.25);
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .author-credit .author-label { color: #8b8fff; font-weight: 500; }
+    .author-credit .author-name { color: #fff; font-weight: 700; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="header-icon">💤</span>
+    <h1>Tab Sleeper</h1>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-number" id="sleepCount">—</div>
+    <div class="stat-label">tabs sleeping</div>
+  </div>
+
+  <div class="pause-banner" id="pauseBanner">
+    <span class="pause-dot"></span>
+    <span>Sleeping is paused — all tabs stay awake</span>
+  </div>
+
+  <div class="btn-group">
+    <button id="pauseBtn" type="button">
+      <span id="pauseIcon">⏸</span>
+      <span id="pauseLabel">Pause sleeping</span>
+    </button>
+    <button id="whitelistBtn" type="button">
+      🛡️ Never sleep this site
+    </button>
+    <button id="sleepBtn" type="button">
+      <span>😴 Sleep this tab</span>
+      <span style="opacity: 0.8; font-size: 11px; font-weight: 500; margin-left: 8px; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px;">Ctrl+Shift+S</span>
+    </button>
+    <button id="sleepAllBtn" type="button" style="background: #1a1d27; border: 1px solid #2a2d3a; color: #e2e4e9;">
+      🧹 Sleep all other tabs
+    </button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="author-credit">
+    <span class="author-label">Author:</span>
+    <span class="author-name">Jyotirmay Biswas</span>
+  </div>
+
+  <div class="footer">
+    <a href="#" id="optionsLink">⚙ Settings</a>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
