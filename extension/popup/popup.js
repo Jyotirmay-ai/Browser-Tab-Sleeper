@@ -126,6 +126,38 @@ function showStatus(msg) {
   statusTimer = setTimeout(() => statusEl.classList.remove("show"), 2000);
 }
 
+// ---- GitHub Star Prompt ----
+async function checkStarPrompt() {
+  const s = await getSettings();
+  if (s.starGiven) return;
+
+  const now = Date.now();
+  if (!s.nextStarPromptTime) {
+    // First time initialized: set to 7 days from now
+    await saveSettings({ nextStarPromptTime: now + 7 * 24 * 60 * 60 * 1000 });
+    return;
+  }
+
+  if (now >= s.nextStarPromptTime) {
+    const d = new Date();
+    // After 10:30 AM local time
+    if (d.getHours() > 10 || (d.getHours() === 10 && d.getMinutes() >= 30)) {
+      document.getElementById("starBanner").classList.add("show");
+    }
+  }
+}
+
+document.getElementById("btnStarYes").addEventListener("click", async () => {
+  await saveSettings({ starGiven: true });
+  document.getElementById("starBanner").classList.remove("show");
+});
+
+document.getElementById("btnStarLater").addEventListener("click", async () => {
+  await saveSettings({ nextStarPromptTime: Date.now() + 7 * 24 * 60 * 60 * 1000 });
+  document.getElementById("starBanner").classList.remove("show");
+});
+
 // ---- Init ----
 updateSleepCount();
 updatePauseUI();
+checkStarPrompt();

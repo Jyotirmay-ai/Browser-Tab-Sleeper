@@ -73,6 +73,38 @@
       flex-shrink: 0;
     }
 
+    /* ---- Star Banner ---- */
+    .star-banner {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.04));
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .star-banner.show { display: flex; }
+    .star-text { font-size: 13px; color: #f0f1f4; text-align: center; }
+    .star-text strong { color: #ffd700; }
+    .star-actions { display: flex; gap: 8px; justify-content: center; }
+    .star-actions a, .star-actions button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    #btnStarYes { background: #ffd700; color: #12141c; }
+    #btnStarYes:hover { background: #ffea00; }
+    #btnStarLater { background: rgba(255,255,255,0.1); color: #c5c8d2; font-family: inherit; }
+    #btnStarLater:hover { background: rgba(255,255,255,0.2); }
+
     /* ---- Buttons ---- */
     .btn-group {
       display: flex;
@@ -180,6 +212,17 @@
   <div class="pause-banner" id="pauseBanner">
     <span class="pause-dot"></span>
     <span>Sleeping is paused — all tabs stay awake</span>
+  </div>
+
+  <div class="star-banner" id="starBanner">
+    <div class="star-text">
+      <strong>Enjoying Tab Sleeper?</strong><br>
+      A GitHub star would mean the world!
+    </div>
+    <div class="star-actions">
+      <a href="https://github.com/Jyotirmay-ai/Browser-Tab-Sleeper" target="_blank" id="btnStarYes">⭐ Star us</a>
+      <button id="btnStarLater">Later</button>
+    </div>
   </div>
 
   <div class="btn-group">

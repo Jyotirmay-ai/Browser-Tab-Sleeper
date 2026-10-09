@@ -9,6 +9,8 @@ const DEFAULTS = Object.freeze({
   sleepOnStartup: true,
   paused: false,
   whitelist: [],
+  starGiven: false,
+  nextStarPromptTime: 0,
 });
 
 /**
